@@ -8,6 +8,8 @@ message.textContent = messages[Math.floor(Math.random() * 5)]
 var canvasWidth, canvasHeight;
 var lastRun = 0;
 var startTime = 0;
+var dt = 1;
+var animationRunning = false;
 var fireworks = [];
 var particles = [];
 var colors = ['#FF5252', '#FF4081', '#E040FB', '#7C4DFF', '#536DFE', '#448AFF', '#40C4FF', '#18FFFF', '#64FFDA', '#69F0AE', '#B2FF59', '#EEFF41', '#FFFF00', '#FFD740', '#FFAB40', '#FF6E40'];
@@ -19,12 +21,16 @@ var button = document.getElementById('myButton');
 // Add a click event listener to the button
 button.addEventListener('click', function () {
     message.textContent = messages[Math.floor(Math.random() * 5)];
-
-    lastRun = 0;
-    startTime = performance.now();
-    fireworks = [];
-    particles = [];
-    Run();
+    animationRunning = false;
+    setTimeout(function () { //adding a little delay to let prior execution to exit
+        lastRun = 0;
+        dt = 1;
+        startTime = performance.now();
+        fireworks = [];
+        particles = [];
+        animationRunning = true;
+        Run();
+    }, 20);
 });
 
 //resets the dimensions of the canvas element to match the dimensions of the window
@@ -78,7 +84,6 @@ function CreateBurst(firework) {
 function Run() {
     //dt (delta time) calculates the time difference between the current frame and the previous frame
     //used to update positions and sizes of fireworks and particles to ensure smooth animation
-    var dt = 1;
     if (lastRun != 0) {
         dt = Math.min(50, ((performance.now() - startTime) - lastRun));
     }
@@ -92,52 +97,58 @@ function Run() {
     }
 
     for (let indexOfFirework in fireworks) {
-        var currentFirework = fireworks[indexOfFirework];
+        if (animationRunning) {
+            var currentFirework = fireworks[indexOfFirework];
 
-        //adding the firework (as a circle)
-        ctx.beginPath();
-        //x and y coordinates multiplied by canvas size to fit the full page
-        ctx.arc(currentFirework.xCoord * canvasWidth, currentFirework.yCoord * canvasHeight, currentFirework.size, 0, 2 * Math.PI);
-        ctx.fillStyle = currentFirework.color;
-        ctx.fill();
+            //adding the firework (as a circle)
+            ctx.beginPath();
+            //x and y coordinates multiplied by canvas size to fit the full page
+            ctx.arc(currentFirework.xCoord * canvasWidth, currentFirework.yCoord * canvasHeight, currentFirework.size, 0, 2 * Math.PI);
+            ctx.fillStyle = currentFirework.color;
+            ctx.fill();
 
-        //updating the coordinates to act as a firework shooting out into the sky animation
-        currentFirework.xCoord -= currentFirework.xOffset;
-        currentFirework.yCoord -= currentFirework.yOffset;
-        currentFirework.xOffset -= (currentFirework.xOffset * dt * 0.001);
-        currentFirework.yOffset -= ((currentFirework.yOffset + 0.2) * dt * 0.00005);
+            //updating the coordinates to act as a firework shooting out into the sky animation
+            currentFirework.xCoord -= currentFirework.xOffset;
+            currentFirework.yCoord -= currentFirework.yOffset;
+            currentFirework.xOffset -= (currentFirework.xOffset * dt * 0.001);
+            currentFirework.yOffset -= ((currentFirework.yOffset + 0.2) * dt * 0.00005);
 
-        //after the firework has peaked, create a firework burst or explosion
-        if (currentFirework.yOffset < -0.005) {
-            CreateBurst(currentFirework); //creating a burst for the firework
-            fireworks.splice(indexOfFirework, 1); //removing the firework from the array
-        }
+            //after the firework has peaked, create a firework burst or explosion
+            if (currentFirework.yOffset < -0.005) {
+                CreateBurst(currentFirework); //creating a burst for the firework
+                fireworks.splice(indexOfFirework, 1); //removing the firework from the array
+            }
+        } else { return; }
     }
 
     for (let indexOfParticle in particles) {
+        if (animationRunning) {
+            var particle = particles[indexOfParticle];
 
-        var particle = particles[indexOfParticle];
+            //drawing the particle
+            ctx.beginPath();
+            ctx.arc(particle.xCoord, particle.yCoord, particle.size, 0, 2 * Math.PI);
+            ctx.fillStyle = particle.color;
+            ctx.fill();
 
-        //drawing the particle
-        ctx.beginPath();
-        ctx.arc(particle.xCoord, particle.yCoord, particle.size, 0, 2 * Math.PI);
-        ctx.fillStyle = particle.color;
-        ctx.fill();
+            //updating particle position and size to act as bursting animation
+            particle.xCoord -= particle.xOffset;
+            particle.yCoord -= particle.yOffset;
+            particle.xOffset -= (particle.xOffset * dt * 0.001);
+            particle.yOffset -= ((particle.yOffset + 5) * dt * 0.0005);
+            particle.size -= (dt * 0.002 * Math.random())
 
-        //updating particle position and size to act as bursting animation
-        particle.xCoord -= particle.xOffset;
-        particle.yCoord -= particle.yOffset;
-        particle.xOffset -= (particle.xOffset * dt * 0.001);
-        particle.yOffset -= ((particle.yOffset + 5) * dt * 0.0005);
-        particle.size -= (dt * 0.002 * Math.random())
-
-        //checks if particle has moved out of bounds or if size is too small, if so then removes it
-        if ((particle.y > canvasHeight) || (particle.y < -50) || (particle.size <= 0)) {
-            particles.splice(indexOfParticle, 1);
-        }
+            //checks if particle has moved out of bounds or if size is too small, if so then removes it
+            if ((particle.y > canvasHeight) || (particle.y < -50) || (particle.size <= 0)) {
+                particles.splice(indexOfParticle, 1);
+            }
+        } else { return; }
     }
 
-    if (((performance.now() - startTime) < 2000) || (fireworks.length > 0) || (particles.length > 0)) { //if there are still some fireworks/particles left then run the loop (make sure they burst)
+    if ((((performance.now() - startTime) < 2000) || (fireworks.length > 0) || (particles.length > 0)) && animationRunning) { //if there are still some fireworks/particles left then run the loop (make sure they burst)
         requestAnimationFrame(Run); //animation loop
+    } else {
+        return;
     }
+
 }
