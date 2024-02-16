@@ -7,6 +7,7 @@ message.textContent = messages[Math.floor(Math.random() * 5)]
 
 var canvasWidth, canvasHeight;
 var lastRun = 0;
+var startTime = 0;
 var fireworks = [];
 var particles = [];
 var colors = ['#FF5252', '#FF4081', '#E040FB', '#7C4DFF', '#536DFE', '#448AFF', '#40C4FF', '#18FFFF', '#64FFDA', '#69F0AE', '#B2FF59', '#EEFF41', '#FFFF00', '#FFD740', '#FFAB40', '#FF6E40'];
@@ -18,6 +19,11 @@ var button = document.getElementById('myButton');
 // Add a click event listener to the button
 button.addEventListener('click', function () {
     message.textContent = messages[Math.floor(Math.random() * 5)];
+
+    lastRun = 0;
+    startTime = performance.now();
+    fireworks = [];
+    particles = [];
     Run();
 });
 
@@ -74,14 +80,14 @@ function Run() {
     //used to update positions and sizes of fireworks and particles to ensure smooth animation
     var dt = 1;
     if (lastRun != 0) {
-        dt = Math.min(50, (performance.now() - lastRun));
+        dt = Math.min(50, ((performance.now() - startTime) - lastRun));
     }
-    lastRun = performance.now(); //current timestamp in milliseconds
+    lastRun = (performance.now() - startTime); //current timestamp in milliseconds
 
     ctx.fillStyle = "rgba(0,0,0,0.25)"; //sets canvas context to black
     ctx.fillRect(0, 0, canvasWidth, canvasHeight); //draws a filled rectangle on the canvas context
 
-    if ((fireworks.length < 10) && (Math.random() > 0.96) && (performance.now() < 3000)) { //limiting how many fireworks are created
+    if ((fireworks.length < 10) && (Math.random() > 0.96) && ((performance.now() - startTime) < 3000)) { //limiting how many fireworks are created
         CreateFirework(); //creates a new firework
     }
 
@@ -131,7 +137,7 @@ function Run() {
         }
     }
 
-    if ((performance.now() < 2000) || (fireworks.length > 0) || (particles.length > 0)) { //if there are still some fireworks/particles left then run the loop (make sure they burst)
+    if (((performance.now() - startTime) < 2000) || (fireworks.length > 0) || (particles.length > 0)) { //if there are still some fireworks/particles left then run the loop (make sure they burst)
         requestAnimationFrame(Run); //animation loop
     }
 }
