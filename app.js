@@ -5,12 +5,6 @@ var message = document.getElementById("message");
 var messages = ["Happy Birthday!", "Congratulations!", "Happy Work Anniversary!", "Happy New Year!", "Happy Holidays!"];
 message.textContent = messages[Math.floor(Math.random() * 5)]
 
-//var button = document.getElementById('myButton');
-// Add a click event listener to the button
-/*button.addEventListener('click', function () {
-    message.textContent = messages[Math.floor(Math.random() * 5)];
-});*/
-
 var canvasWidth, canvasHeight;
 var lastRun = 0;
 var fireworks = [];
@@ -20,7 +14,12 @@ var colors = ['#FF5252', '#FF4081', '#E040FB', '#7C4DFF', '#536DFE', '#448AFF', 
 window.onresize = function () { ResetDimensions(); } //When the window is resized, the reset() function is called to adjust the dimensions of the canvas element to match the new dimensions of the window.
 ResetDimensions();
 
-Run();
+var button = document.getElementById('myButton');
+// Add a click event listener to the button
+button.addEventListener('click', function () {
+    message.textContent = messages[Math.floor(Math.random() * 5)];
+    Run();
+});
 
 //resets the dimensions of the canvas element to match the dimensions of the window
 function ResetDimensions() {
@@ -82,7 +81,7 @@ function Run() {
     ctx.fillStyle = "rgba(0,0,0,0.25)"; //sets canvas context to black
     ctx.fillRect(0, 0, canvasWidth, canvasHeight); //draws a filled rectangle on the canvas context
 
-    if ((fireworks.length < 10) && (Math.random() > 0.96)) { //limiting how many fireworks are created
+    if ((fireworks.length < 10) && (Math.random() > 0.96) && (performance.now() < 3000)) { //limiting how many fireworks are created
         CreateFirework(); //creates a new firework
     }
 
@@ -132,10 +131,7 @@ function Run() {
         }
     }
 
-    if (performance.now() < 5000) { //stops after 5 seconds
+    if ((performance.now() < 2000) || (fireworks.length > 0) || (particles.length > 0)) { //if there are still some fireworks/particles left then run the loop (make sure they burst)
         requestAnimationFrame(Run); //animation loop
-    } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        message.textContent = messages[Math.floor(Math.random() * 5)]
     }
 }
