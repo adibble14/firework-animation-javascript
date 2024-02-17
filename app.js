@@ -6,10 +6,10 @@ var messages = ["Happy Birthday!", "Congratulations!", "Happy Work Anniversary!"
 message.textContent = messages[Math.floor(Math.random() * 5)]
 
 var canvasWidth, canvasHeight;
-var lastRun = 0;
-var startTime = 0;
-var dt = 1;
-var animationRunning = false;
+var lastRun = 0; //time since the last run of the run function
+var startTime = 0; //time when the button was clicked
+var dt = 1; //time difference between the current frame and the previous frame
+var animationRunning = false; //if the animation is running or not
 var fireworks = [];
 var particles = [];
 var colors = ['#FF5252', '#FF4081', '#E040FB', '#7C4DFF', '#536DFE', '#448AFF', '#40C4FF', '#18FFFF', '#64FFDA', '#69F0AE', '#B2FF59', '#EEFF41', '#FFFF00', '#FFD740', '#FFAB40', '#FF6E40'];
@@ -21,6 +21,7 @@ var button = document.getElementById('myButton');
 // Add a click event listener to the button
 button.addEventListener('click', function () {
     message.textContent = messages[Math.floor(Math.random() * 5)];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     animationRunning = false;
     setTimeout(function () { //adding a little delay to let prior execution to exit
         lastRun = 0;
@@ -89,7 +90,7 @@ function Run() {
     }
     lastRun = (performance.now() - startTime); //current timestamp in milliseconds
 
-    ctx.fillStyle = "rgba(0,0,0,0.25)"; //sets canvas context to black
+    ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight); //draws a filled rectangle on the canvas context
 
     if ((fireworks.length < 10) && (Math.random() > 0.96) && ((performance.now() - startTime) < 3000)) { //limiting how many fireworks are created
