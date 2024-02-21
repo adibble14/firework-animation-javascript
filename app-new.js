@@ -1,8 +1,12 @@
-var container = document.createElement("DIV");
+var container = document.createElement("DIV"); //creates a new div element that acts as the container for the animation
 document.body.insertBefore(container, document.getElementById("container"));
 
 fireworks = [];
 particles = [];
+
+var message = document.getElementById("message");
+var messages = ["Happy Birthday!", "Congratulations!", "Happy Work Anniversary!", "Happy New Year!", "Happy Holidays!"];
+message.textContent = messages[Math.floor(Math.random() * 5)]
 
 const particleInitialVelocity = 0.5; //initial velocity for particle
 const fireworkInitialVelocity = 0.5; //initial velocity for seed
@@ -51,10 +55,12 @@ function newParticle(x, y, angle) {
     return particle;
 }
 
-document.addEventListener("click", newFireWorkOnClick);
-
+var button = document.getElementById('myButton');
+button.addEventListener('click', newFireWorkOnClick);// Add a click event listener to the button
 function newFireWorkOnClick(event) {
-    newFirework(event.pageX - container.offsetLeft + cursorXOffset, event.pageY - container.offsetTop + cursorYOffset);
+    message.textContent = messages[Math.floor(Math.random() * 5)]
+    newFirework(event.pageX - container.offsetLeft + cursorXOffset - 200, event.pageY - container.offsetTop + cursorYOffset + 300);
+    newFirework(event.pageX - container.offsetLeft + cursorXOffset + 200, event.pageY - container.offsetTop + cursorYOffset + 300);
 }
 
 //creates a new firework, the firework is the initial point that is clicked on to create the firework
@@ -77,17 +83,17 @@ function newFirework(x, y) {
     return firework;
 }
 
-//creates a new star, the star is the collection of particles that are created when the firework explodes
-function newStar(x, y) {
-    var star = document.createElement("DIV");
-    star.setAttribute('class', 'star');
+//creates a new burst, the burst is the collection of particles that are created when the firework explodes
+function newBurst(x, y) {
+    var burst = document.createElement("DIV");
+    burst.setAttribute('class', 'burst');
     var airResistance = 0;
     while (airResistance < 360) {
         var particle = newParticle(x, y, airResistance);
-        star.appendChild(particle);
+        burst.appendChild(particle);
         airResistance += 5;
     }
-    container.appendChild(star);
+    container.appendChild(burst);
 }
 
 var lastRun = Date.now();
@@ -110,7 +116,7 @@ function run() {
             firework.style.top = firework.position.y + 'px';
         }
         else {
-            newStar(firework.position.x, firework.position.y);
+            newBurst(firework.position.x, firework.position.y);
             firework.parentNode.removeChild(firework);
             fireworks.splice(i, 1);
         }
