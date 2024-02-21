@@ -102,7 +102,7 @@ body {
     }
 }
 
-.fireWorkBatch {
+.star {
     z-index: 999;
     position: absolute;
     top: 0px;
@@ -112,7 +112,7 @@ body {
     animation-duration: 2.5s;
 }
 
-.fireWorkParticle {
+.particle {
     z-index: 999;
     position: absolute;
     height: 5px;
@@ -124,7 +124,7 @@ body {
     animation-iteration-count: infinite;
 }
 
-.fireWorkSeed {
+.firework {
     z-index: 999;
     position: absolute;
     height: 5px;

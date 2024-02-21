@@ -1,131 +1,133 @@
+var container = document.createElement("DIV");
+document.body.insertBefore(container, document.getElementById("container"));
 
-var brd = document.createElement("DIV");
-document.body.insertBefore(brd, document.getElementById("board"));
-
-seeds = [];
+fireworks = [];
 particles = [];
 
-const fwkPtcIniV = 0.5;
-const fwkSedIniV = 0.5;
-const fwkPtcIniT = 2500;
-const fwkSedIniT = 1000;
-const a = 0.0005;
-const g = 0.0005;
-const v = 0.3;
-const cursorXOffset = 5;
+const particleInitialVelocity = 0.5; //initial velocity for particle
+const fireworkInitialVelocity = 0.5; //initial velocity for seed
+const particleInitialTime = 2500; //how long the particle survives in millseconds
+const fireworkInitialTime = 1000; //how long the seed survives in millseconds
+const airResistance = 0.0005;
+const gravitationalPull = 0.0005;
+const velocityVariation = 0.3; //controls the amount of randomness in the velocity of the particles
+const cursorXOffset = 5; //used to adjust the position of the firework seed relative to the position where the user clicks on the webpage
 const cursorYOffset = 0;
 
-
-function newFireworkParticle(x, y, angle) {
-    var fwkPtc = document.createElement("DIV");
-    fwkPtc.setAttribute('class', 'fireWorkParticle');
-    fwkPtc.time = fwkPtcIniT;
+//creates a new particle, particles are the individual dots that make up the firework
+function newParticle(x, y, angle) {
+    var particle = document.createElement("DIV");
+    particle.setAttribute('class', 'particle');
+    particle.time = particleInitialTime;
     while (angle > 360)
         angle -= 360;
     while (angle < 0)
         angle += 360;
-    fwkPtc.velocity = [];
+    particle.velocity = [];
     if (angle > 270) {
-        fwkPtc.velocity.x = fwkPtcIniV * Math.sin(angle * Math.PI / 180) * (1 - Math.random() * v);
-        fwkPtc.velocity.y = fwkPtcIniV * Math.cos(angle * Math.PI / 180) * (1 - Math.random() * v);
+        particle.velocity.x = particleInitialVelocity * Math.sin(angle * Math.PI / 180) * (1 - Math.random() * velocityVariation);
+        particle.velocity.y = particleInitialVelocity * Math.cos(angle * Math.PI / 180) * (1 - Math.random() * velocityVariation);
     }
     else if (angle > 180) {
-        fwkPtc.velocity.x = fwkPtcIniV * Math.sin(angle * Math.PI / 180) * (1 - Math.random() * v);
-        fwkPtc.velocity.y = fwkPtcIniV * Math.cos(angle * Math.PI / 180) * (1 - Math.random() * v);
+        particle.velocity.x = particleInitialVelocity * Math.sin(angle * Math.PI / 180) * (1 - Math.random() * velocityVariation);
+        particle.velocity.y = particleInitialVelocity * Math.cos(angle * Math.PI / 180) * (1 - Math.random() * velocityVariation);
     }
     else if (angle > 90) {
-        fwkPtc.velocity.x = fwkPtcIniV * Math.sin(angle * Math.PI / 180) * (1 - Math.random() * v);
-        fwkPtc.velocity.y = fwkPtcIniV * Math.cos(angle * Math.PI / 180) * (1 - Math.random() * v);
+        particle.velocity.x = particleInitialVelocity * Math.sin(angle * Math.PI / 180) * (1 - Math.random() * velocityVariation);
+        particle.velocity.y = particleInitialVelocity * Math.cos(angle * Math.PI / 180) * (1 - Math.random() * velocityVariation);
     }
     else {
-        fwkPtc.velocity.x = fwkPtcIniV * Math.sin(angle * Math.PI / 180) * (1 - Math.random() * v);
-        fwkPtc.velocity.y = fwkPtcIniV * Math.cos(angle * Math.PI / 180) * (1 - Math.random() * v);
+        particle.velocity.x = particleInitialVelocity * Math.sin(angle * Math.PI / 180) * (1 - Math.random() * velocityVariation);
+        particle.velocity.y = particleInitialVelocity * Math.cos(angle * Math.PI / 180) * (1 - Math.random() * velocityVariation);
     }
-    fwkPtc.position = [];
-    fwkPtc.position.x = x;
-    fwkPtc.position.y = y;
-    fwkPtc.style.left = fwkPtc.position.x + 'px';
-    fwkPtc.style.top = fwkPtc.position.y + 'px';
+    particle.position = [];
+    particle.position.x = x;
+    particle.position.y = y;
+    particle.style.left = particle.position.x + 'px';
+    particle.style.top = particle.position.y + 'px';
     if (particles == null)
         particles = [];
-    particles.push(fwkPtc);
-    return fwkPtc;
+    particles.push(particle);
+    return particle;
 }
 
 document.addEventListener("click", newFireWorkOnClick);
 
 function newFireWorkOnClick(event) {
-    newFireworkSeed(event.pageX - brd.offsetLeft + cursorXOffset, event.pageY - brd.offsetTop + cursorYOffset);
+    newFirework(event.pageX - container.offsetLeft + cursorXOffset, event.pageY - container.offsetTop + cursorYOffset);
 }
 
-function newFireworkSeed(x, y) {
-    var fwkSed = document.createElement("DIV");
-    fwkSed.setAttribute('class', 'fireWorkSeed');
-    brd.appendChild(fwkSed);
-    fwkSed.time = fwkSedIniT;
-    fwkSed.velocity = [];
-    fwkSed.velocity.x = 0;
-    fwkSed.velocity.y = fwkSedIniV;
-    fwkSed.position = [];
-    fwkSed.position.x = x;
-    fwkSed.position.y = y;
-    fwkSed.style.left = fwkSed.position.x + 'px';
-    fwkSed.style.top = fwkSed.position.y + 'px';
-    if (seeds == null)
-        seeds = [];
-    seeds.push(fwkSed);
-    return fwkSed;
+//creates a new firework, the firework is the initial point that is clicked on to create the firework
+function newFirework(x, y) {
+    var firework = document.createElement("DIV");
+    firework.setAttribute('class', 'firework');
+    container.appendChild(firework);
+    firework.time = fireworkInitialTime;
+    firework.velocity = [];
+    firework.velocity.x = 0;
+    firework.velocity.y = fireworkInitialVelocity;
+    firework.position = [];
+    firework.position.x = x;
+    firework.position.y = y;
+    firework.style.left = firework.position.x + 'px';
+    firework.style.top = firework.position.y + 'px';
+    if (fireworks == null)
+        fireworks = [];
+    fireworks.push(firework);
+    return firework;
 }
 
-function newFireWorkStar(x, y) {
-    var fwkBch = document.createElement("DIV");
-    fwkBch.setAttribute('class', 'fireWorkBatch');
-    var a = 0;
-    while (a < 360) {
-        var fwkPtc = newFireworkParticle(x, y, a);
-        fwkBch.appendChild(fwkPtc);
-        a += 5;
+//creates a new star, the star is the collection of particles that are created when the firework explodes
+function newStar(x, y) {
+    var star = document.createElement("DIV");
+    star.setAttribute('class', 'star');
+    var airResistance = 0;
+    while (airResistance < 360) {
+        var particle = newParticle(x, y, airResistance);
+        star.appendChild(particle);
+        airResistance += 5;
     }
-    brd.appendChild(fwkBch);
+    container.appendChild(star);
 }
 
-var before = Date.now();
-var id = setInterval(frame, 5);
+var lastRun = Date.now();
+var timeInterval = setInterval(run, 5); //runs the run function every 5 milliseconds
 
-function frame() {
-    var current = Date.now();
-    var deltaTime = current - before;
-    before = current;
-    for (i in seeds) {
-        var fwkSed = seeds[i];
-        fwkSed.time -= deltaTime;
-        if (fwkSed.time > 0) {
-            fwkSed.velocity.x -= fwkSed.velocity.x * a * deltaTime;
-            fwkSed.velocity.y -= g * deltaTime + fwkSed.velocity.y * a * deltaTime;
-            fwkSed.position.x += fwkSed.velocity.x * deltaTime;
-            fwkSed.position.y -= fwkSed.velocity.y * deltaTime;
-            fwkSed.style.left = fwkSed.position.x + 'px';
-            fwkSed.style.top = fwkSed.position.y + 'px';
+//the animation function
+function run() {
+    var currentRun = Date.now();
+    var deltaTime = currentRun - lastRun;
+    lastRun = currentRun;
+    for (i in fireworks) {
+        var firework = fireworks[i];
+        firework.time -= deltaTime;
+        if (firework.time > 0) {
+            firework.velocity.x -= firework.velocity.x * airResistance * deltaTime;
+            firework.velocity.y -= gravitationalPull * deltaTime + firework.velocity.y * airResistance * deltaTime;
+            firework.position.x += firework.velocity.x * deltaTime;
+            firework.position.y -= firework.velocity.y * deltaTime;
+            firework.style.left = firework.position.x + 'px';
+            firework.style.top = firework.position.y + 'px';
         }
         else {
-            newFireWorkStar(fwkSed.position.x, fwkSed.position.y);
-            fwkSed.parentNode.removeChild(fwkSed);
-            seeds.splice(i, 1);
+            newStar(firework.position.x, firework.position.y);
+            firework.parentNode.removeChild(firework);
+            fireworks.splice(i, 1);
         }
     }
     for (i in particles) {
-        var fwkPtc = particles[i];
-        fwkPtc.time -= deltaTime;
-        if (fwkPtc.time > 0) {
-            fwkPtc.velocity.x -= fwkPtc.velocity.x * a * deltaTime;
-            fwkPtc.velocity.y -= g * deltaTime + fwkPtc.velocity.y * a * deltaTime;
-            fwkPtc.position.x += fwkPtc.velocity.x * deltaTime;
-            fwkPtc.position.y -= fwkPtc.velocity.y * deltaTime;
-            fwkPtc.style.left = fwkPtc.position.x + 'px';
-            fwkPtc.style.top = fwkPtc.position.y + 'px';
+        var particle = particles[i];
+        particle.time -= deltaTime;
+        if (particle.time > 0) {
+            particle.velocity.x -= particle.velocity.x * airResistance * deltaTime;
+            particle.velocity.y -= gravitationalPull * deltaTime + particle.velocity.y * airResistance * deltaTime;
+            particle.position.x += particle.velocity.x * deltaTime;
+            particle.position.y -= particle.velocity.y * deltaTime;
+            particle.style.left = particle.position.x + 'px';
+            particle.style.top = particle.position.y + 'px';
         }
         else {
-            fwkPtc.parentNode.removeChild(fwkPtc);
+            particle.parentNode.removeChild(particle);
             particles.splice(i, 1);
         }
     }
