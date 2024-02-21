@@ -4,6 +4,95 @@ body {
     text-align: center;
 }
 
+.burst {
+    z-index: 999;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    animation-name: firework-fade-animation;
+    animation-timing-function: cubic-bezier(0.5, 0, 1. 1);
+    animation-duration: 2.5s;
+}
+
+.particle {
+    z-index: 999;
+    position: absolute;
+    height: 5px;
+    width: 5px;
+    border-radius: 2.5px;
+    animation-name: particle-animation;
+    animation-timing-function: linear;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+.firework {
+    z-index: 999;
+    position: absolute;
+    height: 5px;
+    width: 5px;
+    border-radius: 5px;
+    animation-name: firework-animation;
+    animation-timing-function: linear;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+}
+
+.message {
+    z-index: 998;
+    position: absolute;
+    animation-name: message-animation;
+    animation-timing-function: linear;
+    animation-duration: 2.5s;
+    animation-iteration-count: 1;
+}
+
+/*standard syntax supported by most modern browsers, including Firefox, Chrome, Edge, and newer versions of Safari.*/
+@keyframes particle-animation {
+    0% {
+        background-color: #ff8426;
+    }
+
+    25% {
+        background-color: #fffc84;
+    }
+
+    50% {
+        background-color: #ff83f4;
+    }
+
+    75% {
+        background-color: #83b6ff;
+    }
+
+    100% {
+        background-color: #ff8426;
+    }
+}
+
+/*for WebKit-based browsers, such as Safari and older versions of Chrome.*/
+@-webkit-keyframes particle-animation {
+    0% {
+        background-color: #ff8426;
+    }
+
+    25% {
+        background-color: #fffc84;
+    }
+
+    50% {
+        background-color: #ff83f4;
+    }
+
+    75% {
+        background-color: #83b6ff;
+    }
+
+    100% {
+        background-color: #ff8426;
+    }
+}
+
 @keyframes firework-animation {
     0% {
         background-color: #ff8426;
@@ -13,56 +102,12 @@ body {
         background-color: #fffc84;
     }
 
-    50% {
-        background-color: #ff83f4;
-    }
-
-    75% {
-        background-color: #83b6ff;
-    }
-
     100% {
         background-color: #ff8426;
     }
 }
 
 @-webkit-keyframes firework-animation {
-    0% {
-        background-color: #ff8426;
-    }
-
-    25% {
-        background-color: #fffc84;
-    }
-
-    50% {
-        background-color: #ff83f4;
-    }
-
-    75% {
-        background-color: #83b6ff;
-    }
-
-    100% {
-        background-color: #ff8426;
-    }
-}
-
-@keyframes firework-seed-animation {
-    0% {
-        background-color: #ff8426;
-    }
-
-    25% {
-        background-color: #fffc84;
-    }
-
-    100% {
-        background-color: #ff8426;
-    }
-}
-
-@-webkit-keyframes firework-seed-animation {
     0% {
         background-color: #ff8426;
     }
@@ -104,36 +149,30 @@ body {
     }
 }
 
-.burst {
-    z-index: 999;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    animation-name: firework-fade-animation;
-    animation-timing-function: cubic-bezier(0.5, 0, 1. 1);
-    animation-duration: 2.5s;
+@keyframes message-animation {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
-.particle {
-    z-index: 999;
-    position: absolute;
-    height: 5px;
-    width: 5px;
-    border-radius: 2.5px;
-    animation-name: firework-animation;
-    animation-timing-function: linear;
-    animation-duration: 1s;
-    animation-iteration-count: infinite;
-}
+@-webkit-keyframes message-animation {
+    0% {
+        opacity: 0;
+    }
 
-.firework {
-    z-index: 999;
-    position: absolute;
-    height: 5px;
-    width: 5px;
-    border-radius: 5px;
-    animation-name: firework-seed-animation;
-    animation-timing-function: linear;
-    animation-duration: 0.5s;
-    animation-iteration-count: infinite;
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
