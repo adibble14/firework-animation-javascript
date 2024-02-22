@@ -56,11 +56,13 @@ function newParticle(x, y, angle) {
 
 var button = document.getElementById('myButton');
 button.addEventListener('click', newFireWorkOnClick);// Add a click event listener to the button
-function newFireWorkOnClick(event) {
-    newFirework(event.pageX - container.offsetLeft + cursorXOffset - 300, event.pageY - container.offsetTop + cursorYOffset + 400);
-    newFirework(event.pageX - container.offsetLeft + cursorXOffset, event.pageY - container.offsetTop + cursorYOffset + 400);
-    newFirework(event.pageX - container.offsetLeft + cursorXOffset + 300, event.pageY - container.offsetTop + cursorYOffset + 400);
-    newMessage(event.pageX - container.offsetLeft + cursorXOffset - 150, event.pageY - container.offsetTop + cursorYOffset + 200);
+function newFireWorkOnClick() {
+    newFirework(850, 600);
+    newFirework(1050, 600);
+    newFirework(750, 700);
+    newFirework(950, 700);
+    newFirework(1150, 700);
+    newMessage();
 }
 
 //creates a new firework, the firework is the initial point that is clicked on to create the firework
@@ -97,7 +99,7 @@ function newBurst(x, y) {
 }
 
 //creates a new message that fades in and out
-function newMessage(x, y) {
+function newMessage() {
     if (messages.length > 0) {
         for (i in messages) {
             var m = messages[i];
@@ -111,10 +113,9 @@ function newMessage(x, y) {
     message.textContent = messageContent[Math.floor(Math.random() * 5)];
     container.appendChild(message);
     message.position = [];
-    message.position.x = x;
-    message.position.y = y;
-    message.style.left = message.position.x + 'px';
-    message.style.top = message.position.y + 'px';
+    message.style.left = "50%";
+    message.style.top = "50%";
+    message.style.transform = "translate(-50%, -50%)";
     message.style.fontSize = "50px";
     message.style.fontWeight = "bold";
 
@@ -152,7 +153,7 @@ function run() {
     for (i in particles) {
         var particle = particles[i];
         particle.time -= deltaTime;
-        if (particle.time > 0) {
+        if (particle.time > 0 && particle.position.y < window.innerHeight - 50) { //removing the particles after a certain time or if they go past the height of the window with a small buffer
             particle.velocity.x -= particle.velocity.x * airResistance * deltaTime;
             particle.velocity.y -= gravitationalPull * deltaTime + particle.velocity.y * airResistance * deltaTime;
             particle.position.x += particle.velocity.x * deltaTime;
