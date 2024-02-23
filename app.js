@@ -6,6 +6,7 @@ particles = [];
 messages = [];
 
 var messageContent = ["Happy Birthday!", "Congratulations!", "Happy Work Anniversary!", "Happy New Year!", "Happy Holidays!"];
+var count = messageContent.length; //how many times the animation has run to determine which message to show
 
 const particleInitialVelocity = 0.5; //initial velocity for particle
 const fireworkInitialVelocity = 0.5; //initial velocity for seed
@@ -55,14 +56,35 @@ function newParticle(x, y, angle) {
 }
 
 var button = document.getElementById('myButton');
-button.addEventListener('click', newFireWorkOnClick);// Add a click event listener to the button
-function newFireWorkOnClick() {
+button.addEventListener('click', startAnimation);// Add a click event listener to the button
+function startAnimation() {
+
+    button.disabled = true;
+    button.style.opacity = "0.5";
+
     newFirework(850, 600);
     newFirework(1050, 600);
     newFirework(750, 700);
     newFirework(950, 700);
     newFirework(1150, 700);
     newMessage();
+
+    //after the play button is pushed and after 5 seconds switch to a new message and more fireworks
+    var messageInterval = setInterval(function () {
+        newFirework(850, 600);
+        newFirework(1050, 600);
+        newFirework(750, 700);
+        newFirework(950, 700);
+        newFirework(1150, 700);
+        newMessage();
+
+        if (count == 0) { //after looping through all the messages in the list stop the animation and resetting it
+            clearInterval(messageInterval);
+            button.disabled = false;
+            button.style.opacity = "1";
+            count = messageContent.length;
+        }
+    }, 5000);
 }
 
 //creates a new firework, the firework is the initial point that is clicked on to create the firework
@@ -110,7 +132,8 @@ function newMessage() {
 
     var message = document.createElement("DIV");
     message.setAttribute('class', 'message');
-    message.textContent = messageContent[Math.floor(Math.random() * 5)];
+    message.textContent = messageContent[count - 1];
+    count--;
     container.appendChild(message);
     message.position = [];
     message.style.left = "50%";
