@@ -6,6 +6,7 @@ particles = [];
 messages = [];
 
 var messageContent = ["Happy Birthday!", "Congratulations!", "Happy Work Anniversary!", "Happy New Year!", "Happy Holidays!"];
+var message = document.getElementById("header-message");
 var count = messageContent.length; //how many times the animation has run to determine which message to show
 
 const particleInitialVelocity = 0.5; //initial velocity for particle
@@ -62,20 +63,21 @@ function startAnimation() {
     button.disabled = true;
     button.style.opacity = "0.5";
 
-    newFirework(850, 600);
-    newFirework(1050, 600);
-    newFirework(750, 700);
-    newFirework(950, 700);
-    newFirework(1150, 700);
-    newMessage();
+    newFirework(window.innerWidth * 0.55, window.innerHeight * 0.65);
+    newFirework(window.innerWidth * 0.45, window.innerHeight * 0.65);
+    newFirework(window.innerWidth * 0.6, window.innerHeight * 0.78);
+    newFirework(window.innerWidth * 0.5, window.innerHeight * 0.78);
+    newFirework(window.innerWidth * 0.4, window.innerHeight * 0.78);
+    newMessage(window.innerWidth * 0.5, window.innerHeight * 0.5);
 
     //after the play button is pushed and after 5 seconds switch to a new message and more fireworks
     var messageInterval = setInterval(function () {
-        newFirework(850, 600);
-        newFirework(1050, 600);
-        newFirework(750, 700);
-        newFirework(950, 700);
-        newFirework(1150, 700);
+
+        newFirework(window.innerWidth * 0.55, window.innerHeight * 0.65);
+        newFirework(window.innerWidth * 0.45, window.innerHeight * 0.65);
+        newFirework(window.innerWidth * 0.6, window.innerHeight * 0.78);
+        newFirework(window.innerWidth * 0.5, window.innerHeight * 0.78);
+        newFirework(window.innerWidth * 0.4, window.innerHeight * 0.78);
         newMessage();
 
         if (count == 0) { //after looping through all the messages in the list stop the animation and resetting it
@@ -121,24 +123,31 @@ function newBurst(x, y) {
 }
 
 //creates a new message that fades in and out
-function newMessage() {
-    if (messages.length > 0) {
+function newMessage(x, y) {
+    /*if (messages.length > 0) {
         for (i in messages) {
             var m = messages[i];
-            m.parentNode.removeChild(m); //removing message from the container and the array
+            //m.parentNode.removeChild(m); //removing message from the container and the array
         }
         messages = [];
-    }
+    }*/
 
-    var message = document.createElement("DIV");
-    message.setAttribute('class', 'message');
+    //var message = document.createElement("DIV");
+    //message.setAttribute('class', 'message');
     message.textContent = messageContent[count - 1];
     count--;
     container.appendChild(message);
-    message.position = [];
-    message.style.left = "50%";
-    message.style.top = "50%";
-    message.style.transform = "translate(-50%, -50%)";
+    //message.position = [];
+    //message.style.left = "50%";
+    //message.style.top = "50%";
+    // message.style.transform = "translate(-50%, -50%)";
+
+    /*message.position = [];
+    message.position.x = x;
+    message.position.y = y;
+    message.style.left = message.position.x + 'px';
+    message.style.top = message.position.y + 'px';*/
+
     message.style.fontSize = "50px";
     message.style.fontWeight = "bold";
 
@@ -176,7 +185,7 @@ function run() {
     for (i in particles) {
         var particle = particles[i];
         particle.time -= deltaTime;
-        if (particle.time > 0 && particle.position.y < window.innerHeight - 50) { //removing the particles after a certain time or if they go past the height of the window with a small buffer
+        if (particle.time > 0 && particle.position.y < window.innerHeight - 65 && particle.position.x >= 20 && particle.position.x <= window.innerWidth - 20) { //removing the particles after a certain time or if they go past the height of the window with a small buffer
             particle.velocity.x -= particle.velocity.x * airResistance * deltaTime;
             particle.velocity.y -= gravitationalPull * deltaTime + particle.velocity.y * airResistance * deltaTime;
             particle.position.x += particle.velocity.x * deltaTime;
