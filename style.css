@@ -32,7 +32,7 @@
     animation-iteration-count: infinite;
 }
 
-#header-message {
+.header-message {
     z-index: 998;
     animation-name: message-animation;
     animation-timing-function: linear;
