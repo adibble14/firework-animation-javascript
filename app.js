@@ -138,7 +138,7 @@ function startAnimation() {
     newFirework(window.innerWidth * 0.6, window.innerHeight * 0.78);
     newFirework(window.innerWidth * 0.5, window.innerHeight * 0.78);
     newFirework(window.innerWidth * 0.4, window.innerHeight * 0.78);
-    newMessage(window.innerWidth * 0.5, window.innerHeight * 0.5);
+    newMessage();
 
     //after 5 seconds switch to a new message and more fireworks
     messageInterval = setInterval(function () {
