@@ -1,3 +1,10 @@
+.overlay {
+    height: 0px;
+    overflow: visible;
+    pointer-events: none;
+    background: none !important;
+}
+
 .burst {
     z-index: 999;
     position: absolute;
@@ -48,6 +55,7 @@
     justify-content: center;
     align-items: center;
 }
+
 
 
 /*standard syntax supported by most modern browsers, including Firefox, Chrome, Edge, and newer versions of Safari.*/

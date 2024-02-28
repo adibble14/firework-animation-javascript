@@ -1,6 +1,7 @@
 //creates a new div element that acts as the container for the animation
 var container = document.createElement("DIV");
 document.body.insertBefore(container, document.getElementById("container"));
+container.setAttribute('class', 'overlay');
 
 //arrays
 fireworks = [];
